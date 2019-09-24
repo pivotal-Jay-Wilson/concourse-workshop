@@ -1,10 +1,10 @@
+---
 resources:
 - name: git-assets
   type: git
   source:
     branch: master
-    uri: https://github.com/azwickey-pivotal/concourse-workshop
-
+    uri: https://github.com/pivotal-Jay-Wilson/concourse-workshop
 jobs:
 - name: unit-test
   public: true
@@ -13,3 +13,12 @@ jobs:
     trigger: true
   - task: mvn-test
     file: git-assets/ci/tasks/mvn-test.yml
+- name: deploy
+  public: true
+  plan:
+  - get: git-assets
+    trigger: true
+    passed:
+      - unit-test
+  - task: mvn-package
+    file: git-assets/ci/tasks/mvn-package.yml

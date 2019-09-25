@@ -4,3 +4,4 @@ set -xe
 
 cd git-assets
 mvn test
+

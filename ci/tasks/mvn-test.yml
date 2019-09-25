@@ -15,4 +15,4 @@ inputs:
 #   args: 
 #     - "-lartR"
 run:
-  path: git-assets/ci/tasks/test.sh
+  path: git-assets/ci/tasks/test1.sh

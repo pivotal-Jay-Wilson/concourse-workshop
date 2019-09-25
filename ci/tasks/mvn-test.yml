@@ -11,4 +11,6 @@ inputs:
 - name: git-assets
 
 run:
+  path: ls -lart
+run:
   path: git-assets/ci/tasks/test.sh

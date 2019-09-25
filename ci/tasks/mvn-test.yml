@@ -10,9 +10,9 @@ image_resource:
 inputs:
 - name: git-assets
 
-run:
-  path: ls
-  args: 
-    - "-lartR"
 # run:
-#   path: git-assets/ci/tasks/test.sh
+#   path: ls
+#   args: 
+#     - "-lartR"
+run:
+  path: git-assets/ci/tasks/test.sh

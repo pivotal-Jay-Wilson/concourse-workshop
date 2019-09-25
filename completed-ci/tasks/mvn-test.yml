@@ -11,5 +11,4 @@ inputs:
 - name: git-assets
 
 run:
-  path: ls -lart
-  # path: git-assets/concourse-workshop/ci/tasks/test.sh
+  path: git-assets/concourse-workshop/ci/tasks/test.sh

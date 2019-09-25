@@ -29,12 +29,15 @@ services:
       - CONCOURSE_LDAP_HOST=openldap
       - CONCOURSE_LDAP_BIND_DN=cn=admin,dc=localhost
       - CONCOURSE_LDAP_BIND_PW=admin
-      - CONCOURSE_LDAP_USER_SEARCH_BASE_DN=ou=ops,dc=localhost
+      - CONCOURSE_LDAP_USER_SEARCH_BASE_DN=ou=people,dc=localhost
       - CONCOURSE_LDAP_USER_SEARCH_USERNAME=uid
       - CONCOURSE_LDAP_USER_SEARCH_ID_ATTR=uid 
       - CONCOURSE_LDAP_USER_SEARCH_EMAIL_ATTR=mail
       - CONCOURSE_LDAP_INSECURE_NO_SSL=true
-
+      - CONCOURSE_LDAP_GROUP_SEARCH_BASE_DN=ou=groups,dc=localhost
+      - CONCOURSE_LDAP_GROUP_SEARCH_NAME_ATTR=cn
+      - CONCOURSE_MAIN_TEAM_LDAP_GROUP=employees
+      - CONCOURSE_LDAP_GROUP_SEARCH_GROUP_ATTR=memberUid
   openldap:
     image: osixia/openldap:latest
     command: "--loglevel trace"

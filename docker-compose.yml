@@ -1,0 +1,82 @@
+---
+version: "3"
+
+services:
+  concourse-db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=concourse
+      - POSTGRES_PASSWORD=concourse_pass
+      - POSTGRES_USER=concourse_user
+      - PGDATA=/database
+    volumes:
+      - ./data/postgresql:/var/lib/postgresql/data
+
+  concourse:
+    image: concourse/concourse:4.2.1
+    command: quickstart
+    privileged: true
+    depends_on: [concourse-db]
+    ports: ["8080:8080"]
+    environment:
+      - CONCOURSE_POSTGRES_HOST=concourse-db
+      - CONCOURSE_POSTGRES_USER=concourse_user
+      - CONCOURSE_POSTGRES_PASSWORD=concourse_pass
+      - CONCOURSE_POSTGRES_DATABASE=concourse
+      - CONCOURSE_EXTERNAL_URL
+      - CONCOURSE_ADD_LOCAL_USER=admin:admin
+      - CONCOURSE_MAIN_TEAM_LOCAL_USER=admin
+      - CONCOURSE_LDAP_HOST=openldap
+      - CONCOURSE_LDAP_BIND_DN=cn=admin,dc=localhost
+      - CONCOURSE_LDAP_BIND_PW=admin
+      - CONCOURSE_LDAP_USER_SEARCH_BASE_DN=ou=ops,dc=localhost
+      - CONCOURSE_LDAP_USER_SEARCH_USERNAME=uid
+      - CONCOURSE_LDAP_USER_SEARCH_ID_ATTR=uid 
+      - CONCOURSE_LDAP_USER_SEARCH_EMAIL_ATTR=mail
+      - CONCOURSE_LDAP_INSECURE_NO_SSL=true
+
+  openldap:
+    image: osixia/openldap:latest
+    command: "--loglevel trace"
+    container_name: openldap
+    environment:
+       - LDAP_DOMAIN=localhost
+       - LDAP_LOG_LEVEL=2048
+       - LDAP_ORGANISATION=ExampleInc
+       - LDAP_ADMIN_PASSWORD=admin
+       - LDAP_CONFIG_PASSWORD=config
+      # - LDAP_READONLY_USER=false
+      # - LDAP_RFC2307BIS_SCHEMA=false
+      # - LDAP_BACKEND=mdb
+      # - LDAP_TLS=true
+      # - LDAP_TLS_CRT_FILENAME=ldap.crt
+      # - LDAP_TLS_KEY_FILENAME=ldap.key
+      # - LDAP_TLS_DH_PARAM_FILENAME=dhparam.pem
+      # - LDAP_TLS_CA_CRT_FILENAME=ca.crt
+      # - LDAP_TLS_ENFORCE=false
+      # - LDAP_TLS_CIPHER_SUITE=SECURE256:-VERS-SSL3.0
+      # - LDAP_TLS_PROTOCOL_MIN=3.1
+      # - LDAP_TLS_VERIFY_CLIENT=demand
+      # - LDAP_REPLICATION=false
+      # - LDAP_REMOVE_CONFIG_AFTER_SETUP=true
+      # - LDAP_SSL_HELPER_PREFIX=ldap
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./data/ldap/lib:/var/lib/ldap
+      - ./data/ldap/etc/slapd.d:/etc/ldap/slapd.d
+      - ./data/ldap/certs:/container/service/slapd/assets/certs/
+    ports:
+      - "389:389"
+      - "636:636"
+
+  phpldapadmin:
+    image: osixia/phpldapadmin:latest
+    container_name: phpldapadmin
+    environment:
+      -  PHPLDAPADMIN_LDAP_HOSTS=openldap
+      -  PHPLDAPADMIN_HTTPS=false
+    ports:
+      - "8081:80"
+    depends_on:
+      - openldap

@@ -13,6 +13,7 @@ inputs:
 run:
   path: ls
   args: 
-    - git-assets
+    - "-lart"
+    - git-assets/ci
 # run:
 #   path: git-assets/ci/tasks/test.sh

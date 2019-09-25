@@ -11,7 +11,7 @@ inputs:
 - name: git-assets
 
 run:
-  path: ls git
+  path: ls
   args: 
     - git-assets
 # run:
